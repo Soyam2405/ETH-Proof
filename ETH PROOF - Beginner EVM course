@@ -1,0 +1,59 @@
+//SPDX license identifier indicating that the code is licensed under the MIT license.
+
+// SPDX-License-Identifier: MIT
+
+//code should be compiled using a Solidity compiler version equal to or greater than 0.8.0.
+pragma solidity ^0.8.0;
+
+/*
+       REQUIREMENTS
+    1. Your contract will have public variables that store the details about your coin (Token Name, Token Abbrv., Total Supply)
+    2. Your contract will have a mapping of addresses to balances (address => uint)
+    3. You will have a mint function that takes two parameters: an address and a value. 
+       The function then increases the total supply by that number and increases the balance 
+       of the “sender” address by that amount
+    4. Your contract will have a burn function, which works the opposite of the mint function, as it will destroy tokens. 
+       It will take an address and value just like the mint functions. It will then deduct the value from the total supply 
+       and from the balance of the “sender”.
+    5. Lastly, your burn function should have conditionals to make sure the balance of "sender" is greater than or equal 
+       to the amount that is supposed to be burned.
+*/
+
+// the start of a Solidity contract named soyamToken.
+contract soyamToken {
+
+ // public variables here
+
+    string public tokenName="Solana";
+    string public tokenAbbrv="Sol";
+    uint   public totalSupply= 0; //uint (unsigned integer)
+
+// mapping variable here
+//declares a public variable tokenbalances which is a mapping(Mappings are dynamic ds, meaning you can add 
+// new key-value pairs(addresses and balances) as needed during the contract's execution.)
+// from addresses to unsigned integers.
+// It will store the token balances of each address.
+    mapping(address => uint) public tokenbalances;
+
+// mint function
+//function is used to mint (create) new tokens and assign them to a specific address.
+
+    function mint(address _tokenreceiveraddress, uint _totalvalueoftoken) public {
+        //increases the totalSupply by the totalvalueoftoken passed as an argument.
+        totalSupply += _totalvalueoftoken;
+        //increases the token balance of the tokenreceiveraddress address by the value passed as an argument.
+        tokenbalances[_tokenreceiveraddress] += _totalvalueoftoken;
+    }
+// burn function
+//  function is used to burn (destroy) existing tokens from a specific address.
+
+    function burn(address _receiveraddress, uint _totalvalueoftoken) public {
+        //checks if token balance of the receiver address is greater than or equal to the total token value to be burned. 
+        // If not, it will revert the transaction with an error message.
+        require(tokenbalances[_receiveraddress] >= _totalvalueoftoken, "Token balance is not enough.");
+        //decreases the totalSupply by the totalvalueoftoken passed as an argument.
+        totalSupply -= _totalvalueoftoken;
+        //decreases the token balance of the tokenreceiveraddress address by the value passed as an argument.
+        tokenbalances[_receiveraddress] -= _totalvalueoftoken;
+    }
+}
